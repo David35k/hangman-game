@@ -11,8 +11,7 @@
 #define MAX_LENGTH 45
 
 void printBoard(char[], char[], int *);
-char *pickWord(char *[MAX_WORDS]);
-bool checkContains(char *, char);
+char *pickWord(char *[]);
 bool gameOverCheck(char[], char[], int *);
 
 int main()
@@ -101,7 +100,6 @@ int main()
 
 void printBoard(char word[], char guesses[], int *pMistakes)
 {
-    // printf("\e[H\e[2J\e[3J"); // clears the screen to make it cool and clean
     printf("\n######## HANGMAN ########\n");
     printf("\n");
 
@@ -152,33 +150,57 @@ char *pickWord(char *words[])
     return words[randNum];
 }
 
-bool checkContains(char *str, char ch)
-{
-}
-
 bool gameOverCheck(char word[], char guesses[], int *pMistakes)
 {
     printf("\e[H\e[2J\e[3J"); // clears the screen to make it cool and clean
 
-    // check the number of mistakes
-    int count = 0;
+    // loop through word and guesses
+    int wrongCount = 0;
+    int correctCount = 0;
+    
     for (int i = 0; i < strlen(guesses); i++)
     {
+        bool flag = false;
         for (int j = 0; j < strlen(word); j++)
         {
             if (word[j] == guesses[i])
             {
-                count++;
+                flag = true;
+                correctCount++;
             }
         }
+
+        if(!flag) 
+            wrongCount++;
+        
     }
 
-    *pMistakes = strlen(guesses) - count; // mistakes = total guesses - correct guesses
+    //spaces are annoying, just going to treat it as correct
+    for (int i = 0; i < strlen(word); i++)
+    {
+        if(word[i] == ' ')
+            correctCount++;
+    }
 
-    // check if they are out of turns
+    // check if won
+
+    // printf("correct: %d", correctCount);
+
+    if(correctCount == strlen(word)) 
+    {
+        printBoard(word, guesses, pMistakes);
+        printf("you won!!!\n");
+        return true;
+    }
+
+    // check if lost
+
+    *pMistakes = wrongCount;
+
     if (*pMistakes == 7)
     {
-        printf("\n you ran out of tries dude");
+        printBoard(word, guesses, pMistakes);
+        printf("\nyou lost dude... the word was: %s\n", word);
         return true;
     }
 
