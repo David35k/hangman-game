@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define MAX_WORDS 22
-#define MAX_LENGTH 45
+#define MAX_WORDS 27 //depends on the word file
+#define MAX_LENGTH 45 // longest word is 45 letters eks dee
 
 void printBoard(char[], char[], int *);
 char *pickWord(char *[]);
